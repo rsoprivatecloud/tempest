@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
-nosetests <%= @test_list.join(" ") %> &>> /var/log/tempest.log
+cd /opt/tempest
+nosetests --logging-format='%(asctime)s: %(name)s: %(levelname)s: %(message)s' <%= @test_list.join(" ") %> &>> /var/log/tempest.log
 

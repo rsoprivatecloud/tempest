@@ -85,3 +85,14 @@ execute "Activate tests" do
   cwd "/opt/tempest/tempest/tests/compute/images"
   user "root"
 end
+
+
+template "/etc/cron.d/tempest" do
+  source "tempest.cron.erb"
+  owner "root"
+  group "root"
+  mode "0555"
+  variables(
+           "test_interval" => node["tempest"]["interval"]
+  )
+end
