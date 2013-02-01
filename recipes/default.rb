@@ -96,3 +96,10 @@ template "/etc/cron.d/tempest" do
            "test_interval" => node["tempest"]["interval"]
   )
 end
+
+template "/etc/logrotate.d/tempest" do
+  source "tempest.logrotate.erb"
+  owner "root"
+  group "root"
+  mode "0555"
+end
