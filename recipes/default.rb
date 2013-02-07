@@ -86,7 +86,6 @@ execute "Activate tests" do
   user "root"
 end
 
-
 template "/etc/cron.d/tempest" do
   source "tempest.cron.erb"
   owner "root"
@@ -95,6 +94,7 @@ template "/etc/cron.d/tempest" do
   variables(
            "test_interval" => node["tempest"]["interval"]
   )
+  only_if { node["tempest"]["use_cron"] }
 end
 
 template "/etc/logrotate.d/tempest" do

@@ -1,7 +1,7 @@
 default["tempest"]["branch"] = "master"                  # node_attribute
-default["tempest"]["use_ssl"] = "false"                  # node_attribute
-default["tempest"]["tenant_isolation"] = "true"                 # node_attribute
-default["tempest"]["tenant_reuse"] = "true"                 # node_attribute
+default["tempest"]["use_ssl"] = false                  # node_attribute
+default["tempest"]["tenant_isolation"] = true                 # node_attribute
+default["tempest"]["tenant_reuse"] = true                 # node_attribute
 default["tempest"]["user1"] = "monitoring"                 # node_attribute
 default["tempest"]["user1_pass"] = "monpass"                 # node_attribute
 default["tempest"]["user1_tenant"] = "monitoring"                 # node_attribute
@@ -14,3 +14,4 @@ default["tempest"]["admin_pass"] = "secrete"              # node_attribute
 default["tempest"]["admin_tenant"] = "admin"              # node_attribute
 default["tempest"]["runlist"] = ["tempest.tests.compute.servers.test_create_server.py:ServersTestJSON.test_list_servers_with_detail", "tempest.tests.compute.images.test_images.py:ImagesTestJSON.test_create_delete_image"]
 default["tempest"]["interval"] = "5"                      # node_attribute how often the tests are run. This is in minutes
+default["tempest"]["use_cron"] = false
