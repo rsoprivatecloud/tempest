@@ -19,7 +19,7 @@
 # this recipe installs the openstack api test suite 'tempest'
 
 
-%w{git python-unittest2 python-nose python-httplib2 python-paramiko}.each do |pkg|
+%w{git python-unittest2 python-nose python-httplib2 python-paramiko python-testtools python-testresources}.each do |pkg|
   package pkg do
     action :install
   end
@@ -75,7 +75,12 @@ template "/opt/tempest/etc/tempest.conf" do
             "glance_port" => gPort,
             "tempest_admin" => node["tempest"]["admin"],
             "tempest_admin_tenant" => node["tempest"]["admin_tenant"],
-            "tempest_admin_pass" => node["tempest"]["admin_pass"]
+            "tempest_admin_pass" => node["tempest"]["admin_pass"],
+            "tempest_alt_ssh_user" => node["tempest"]["alt_ssh_user"],
+            "tempest_ssh_user" => node["tempest"]["ssh_user"],
+            "tempest_user2" => node["tempest"]["user2"],
+            "tempest_user2_pass" => node["tempest"]["user2_pass"],
+            "tempest_user2_tenant" => node["tempest"]["user2_tenant"]
             })
 end
 
