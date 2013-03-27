@@ -24,6 +24,23 @@ else
   release = "folsom"
 end
 
+# set the git branch to use for the tests
+case release
+when "folsom"
+  node.set_unless['tempest']['branch'] = "stable/folsom"
+when "essex-final"
+  node.set_unless['tempest']['branch'] = "stable/essex"
+else
+  # fall through for the ones that we have not yet defined
+  node.set_unless['tempest']['branch'] = "master"
+end
+
+%w{git python-unittest2 python-nose python-httplib2 python-paramiko python-testtools python-testresources python-novaclient python-glanceclient}.each do |pkg|
+  package pkg do
+    action :install
+  end
+end
+
 ks_admin_endpoint = get_access_endpoint("keystone-api", "keystone", "admin-api")
 ks_service_endpoint = get_access_endpoint("keystone-api", "keystone", "service-api")
 keystone = get_settings_by_role("keystone", "keystone")
@@ -130,23 +147,6 @@ if node["tempest"]["test_img1"]["id"].nil?
 else
   Chef::Log.info "tempest/default Using image UUID #{node["tempest"]["test_img1"]["id"]} for tempest tests"
   img1_uuid = node["tempest"]["test_img1"]["id"]
-end
-
-# set the git branch to use for the tests
-case release
-when "folsom"
-  node.set_unless['tempest']['branch'] = "stable/folsom"
-when "essex-final"
-  node.set_unless['tempest']['branch'] = "stable/essex"
-else
-  # fall through for the ones that we have not yet defined
-  node.set_unless['tempest']['branch'] = "master"
-end
-
-%w{git python-unittest2 python-nose python-httplib2 python-paramiko python-testtools python-testresources}.each do |pkg|
-  package pkg do
-    action :install
-  end
 end
 
 execute "clean_tempest_checkout" do
