@@ -8,6 +8,6 @@ version           "0.1.7"
   supports os
 end
 
-%w{ osops-utils }.each do |dep|
+%w{ osops-utils keystone glance }.each do |dep|
   depends dep
 end
