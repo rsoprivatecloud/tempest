@@ -187,7 +187,6 @@ template "/opt/tempest/monitoring.sh" do
 end
 
 # this is placed in a ruby block so we can use a notify when the image is updated and we can get the uuid of the image
-# this has a bug where we only get the image uuid on the second run which isn't the best of things...
 node.run_state['tempest_img1_uuid'] = "undefined in the cookbook"
 node.run_state['tempest_img2_uuid'] = "undefined in the cookbook"
 if node['tempest']['test_img1']['id'].nil?
