@@ -94,19 +94,15 @@ if node['tempest']['test_img1']['id'].nil?
     action :create
     block do
       shell_cmd="nova --os-username=#{node['tempest']['user1']} --os-password=#{node['tempest']['user1_pass']} --os-tenant-name=#{node['tempest']['user1_tenant']} --os-auth-url=#{ks_admin_endpoint['uri']} image-show cirros-#{node['tempest']['user1_tenant']}-image | awk '{if($2==\"id\") print $4}'"
-      Chef::Log.info "BREU Using shell_cmd = #{shell_cmd}"
       img1_uuid_test = Mixlib::ShellOut.new(shell_cmd)
       img1_uuid_test.run_command
-      Chef::Log.info "BREU stdout = #{img1_uuid_test.stdout}"
       img1_uuid=img1_uuid_test.stdout
       img1_uuid.delete("\n")
       if img1_uuid.length > 0
         # guard against a failure in getting the UUID of the image.
-        Chef::Log.info "BREU using uploaded image with UUID of #{img1_uuid}"
         node.set['tempest']['test_img1']['id'] = img1_uuid
         node.save
       else
-        Chef::Log.info "BREU we didn't find the UUID of the image.  This is bad"
       end
     end
   end
