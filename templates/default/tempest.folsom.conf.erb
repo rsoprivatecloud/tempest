@@ -56,8 +56,8 @@ tenant_name = <%= @tempest_user1_tenant %>
 
 # Reference data for tests. The ref and ref_alt should be
 # distinct images/flavors.
-image_ref = <%= @tempest_img_ref1 %>
-image_ref_alt = <%= @tempest_img_ref2 %>
+image_ref = <%= node.run_state['tempest_img1_uuid'] %>
+image_ref_alt = <%= node.run_state['tempest_img2_uuid'] %>
 flavor_ref = <%= @tempest_img_flavor1 %>
 flavor_ref_alt = <%= @tempest_img_flavor2 %>
 
