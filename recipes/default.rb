@@ -17,24 +17,6 @@
 # limitations under the License.
 
 
-# set the package component so we know what version of openstack we are installing
-if not node['package_component'].nil?
-  release = node['package_component']
-else
-  release = "folsom"
-end
-
-# set the git branch to use for the tests
-case release
-when "folsom"
-  node.set_unless['tempest']['branch'] = "stable/folsom"
-when "essex-final"
-  node.set_unless['tempest']['branch'] = "stable/essex"
-else
-  # fall through for the ones that we have not yet defined
-  node.set_unless['tempest']['branch'] = "master"
-end
-
 %w{git python-unittest2 python-nose python-httplib2 python-paramiko python-testtools python-testresources python-novaclient python-glanceclient}.each do |pkg|
   package pkg do
     action :install
@@ -86,46 +68,44 @@ keystone_role "Grant 'member' Role to tempest user for tempest tenant#1" do
   action :grant
 end
 
-if release == "grizzly"
-  # Register tempest tenant for user#2
-  keystone_tenant "Register tempest tenant#2" do
-    auth_host ks_admin_endpoint["host"]
-    auth_port ks_admin_endpoint["port"]
-    auth_protocol ks_admin_endpoint["scheme"]
-    api_ver ks_admin_endpoint["path"]
-    auth_token keystone["admin_token"]
-    tenant_name node["tempest"]["user2_tenant"]
-    tenant_description "Tempest Monitoring Tenant #2"
-    tenant_enabled "true" # Not required as this is the default
-    action :create
-  end
+# Register tempest tenant for user#2
+keystone_tenant "Register tempest tenant#2" do
+  auth_host ks_admin_endpoint["host"]
+  auth_port ks_admin_endpoint["port"]
+  auth_protocol ks_admin_endpoint["scheme"]
+  api_ver ks_admin_endpoint["path"]
+  auth_token keystone["admin_token"]
+  tenant_name node["tempest"]["user2_tenant"]
+  tenant_description "Tempest Monitoring Tenant #2"
+  tenant_enabled "true" # Not required as this is the default
+  action :create
+end
 
-  # Register tempest user#2
-  keystone_user "Register tempest user#2" do
-    auth_host ks_admin_endpoint["host"]
-    auth_port ks_admin_endpoint["port"]
-    auth_protocol ks_admin_endpoint["scheme"]
-    api_ver ks_admin_endpoint["path"]
-    auth_token keystone["admin_token"]
-    tenant_name node["tempest"]["user2_tenant"]
-    user_name node["tempest"]["user2"]
-    user_pass node["tempest"]["user2_pass"]
-    user_enabled "true" # Not required as this is the default
-    action :create
-  end
+# Register tempest user#2
+keystone_user "Register tempest user#2" do
+  auth_host ks_admin_endpoint["host"]
+  auth_port ks_admin_endpoint["port"]
+  auth_protocol ks_admin_endpoint["scheme"]
+  api_ver ks_admin_endpoint["path"]
+  auth_token keystone["admin_token"]
+  tenant_name node["tempest"]["user2_tenant"]
+  user_name node["tempest"]["user2"]
+  user_pass node["tempest"]["user2_pass"]
+  user_enabled "true" # Not required as this is the default
+  action :create
+end
 
-  ## Grant Member role to Tempest user#2 for tempest tenant
-  keystone_role "Grant 'member' Role to tempest user#2 for tempest tenant#2" do
-    auth_host ks_admin_endpoint["host"]
-    auth_port ks_admin_endpoint["port"]
-    auth_protocol ks_admin_endpoint["scheme"]
-    api_ver ks_admin_endpoint["path"]
-    auth_token keystone["admin_token"]
-    tenant_name node["tempest"]["user2_tenant"]
-    user_name node["tempest"]["user2"]
-    role_name "Member"
-    action :grant
-  end
+## Grant Member role to Tempest user#2 for tempest tenant
+keystone_role "Grant 'member' Role to tempest user#2 for tempest tenant#2" do
+  auth_host ks_admin_endpoint["host"]
+  auth_port ks_admin_endpoint["port"]
+  auth_protocol ks_admin_endpoint["scheme"]
+  api_ver ks_admin_endpoint["path"]
+  auth_token keystone["admin_token"]
+  tenant_name node["tempest"]["user2_tenant"]
+  user_name node["tempest"]["user2"]
+  role_name "Member"
+  action :grant
 end
 
 # need to check that this is running on a node where glance is.  presumably
@@ -157,7 +137,7 @@ execute "clean_tempest_checkout" do
 end
 
 execute "checkout_tempest" do
-  command "git checkout #{node['tempest']['branch']}"
+  command "git checkout stable/grizzly"
   cwd "/opt/tempest"
   user "root"
   action :nothing
